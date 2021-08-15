@@ -14,6 +14,7 @@ type Server struct {
 }
 
 type ProjectSettings struct {
+	FileName    string
 	MetaRefresh MetaRefresh
 	Remote      RemoteProject
 }
