@@ -41,6 +41,7 @@ func initConfig() {
 	noConfFile, ok := Environment["NO_CONFIG_FILE"]
 
 	if ok {
+		log.Trace("No Config File Env Variable Found")
 		noConfFileb, err := strconv.ParseBool(noConfFile.(string))
 
 		if err != nil {
@@ -50,12 +51,16 @@ func initConfig() {
 		}
 
 		if !noConfFileb {
+			log.Trace("No Config File Env Variable has disabled loading the config file")
 			configFile = false
 		}
 	}
 
 	// Should we try a different config file name?
 	if name, ok := Environment["CONFIG_FILE"]; ok {
+		log.WithFields(log.Fields{
+			"File Name": name.(string),
+		}).Debug("Config File Env Variable has changed the name of the file we are looking for")
 		configFileName = name.(string)
 	}
 
