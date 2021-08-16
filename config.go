@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"strconv"
 
 	"github.com/ilyakaznacheev/cleanenv"
@@ -66,16 +67,32 @@ func initConfig() {
 
 	// Load the config
 	if configFile {
-		log.WithFields(log.Fields{
-			"Config File": configFileName,
-		}).Debug("Reading Config File")
-
-		cleanenv.ReadConfig(configFileName, &Config)
-		return
+		// Does the file exist?
+		if _, err := os.Stat(configFileName); err == nil {
+			// File Exists, Load it
+			log.WithFields(log.Fields{
+				"Config File": configFileName,
+			}).Debug("Reading Config File")
+			cleanenv.ReadConfig(configFileName, &Config)
+			return
+		} else if os.IsNotExist(err) {
+			// File doesn't exist, default to try ENV
+			log.WithFields(log.Fields{
+				"File Name": configFileName,
+			}).Error("Config File Missing, Defaulting to ENV")
+			cleanenv.ReadEnv(&Config)
+			return
+		} else {
+			// Error, but not that the file doesn't exist. Log the error, and default to ENV
+			log.WithFields(log.Fields{
+				"File Name": configFileName,
+			}).Error(err)
+			cleanenv.ReadEnv(&Config)
+			return
+		}
 	} else {
 		log.Debug("No Config File, reading ENV Variables")
 		cleanenv.ReadEnv(&Config)
 		return
 	}
-
 }
