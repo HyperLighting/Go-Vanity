@@ -28,10 +28,24 @@ type Conf struct {
 		} `yaml:"Remote" json:"Remote" env-prefix:"REMOTE_"`
 	} `yaml:"Projects" json:"Projects" env-prefix:"VANITY_PROJECTS_"`
 	Logging struct {
-		Method string `yaml:"Method" json:"Method" env:"METHOD" env-default:"stdout"`
-		Format string `yaml:"Format" json:"Format" env:"FORMAT" env-default:"text"`
-		Level  string `yaml:"Level" json:"Level" env:"LEVEL" env-default:"Error"`
-		File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
+		Default struct {
+			Method string `yaml:"Method" json:"Method" env:"METHOD" env-default:"stdout"`
+			Format string `yaml:"Format" json:"Format" env:"FORMAT" env-default:"text"`
+			Level  string `yaml:"Level" json:"Level" env:"LEVEL" env-default:"Error"`
+			File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
+		} `yaml:"Default" json:"Default" env-prefix:"DEFAULT_"`
+		Prod struct {
+			Method string `yaml:"Method" json:"Method" env:"METHOD" env-default:"stderr"`
+			Format string `yaml:"Format" json:"Format" env:"FORMAT" env-default:"text"`
+			Level  string `yaml:"Level" json:"Level" env:"LEVEL" env-default:"Error"`
+			File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
+		} `yaml:"Prod" json:"Prod" env-prefix:"PROD_"`
+		Dev struct {
+			Method string `yaml:"Method" json:"Method" env:"METHOD" env-default:"file"`
+			Format string `yaml:"Format" json:"Format" env:"FORMAT" env-default:"text"`
+			Level  string `yaml:"Level" json:"Level" env:"LEVEL" env-default:"Debug"`
+			File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
+		} `yaml:"Dev" json:"Dev" env-prefix:"DEV_"`
 	} `yaml:"Logging" json:"Logging" env-prefix:"VANITY_LOGGING_"`
 }
 
