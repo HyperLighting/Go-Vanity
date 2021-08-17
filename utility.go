@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"strconv"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -62,4 +63,47 @@ func readRemoteFile(source string) (out []byte, err error) {
 	}
 
 	return byteValue, nil
+}
+
+func isGoGetRequest(r *http.Request) bool {
+	// Check if the parameter is in the request
+	const goGetParam string = "download"
+	downloadArr, ok := r.URL.Query()[goGetParam]
+
+	// has it not been specified?
+	if !ok || len(downloadArr) < 1 {
+		log.WithFields(log.Fields{
+			"Download":         r.URL.Query()[goGetParam],
+			"Go Get Parameter": goGetParam,
+		}).Debug("Is Not a Go Get Request")
+		return false
+	}
+
+	// Convert the parameter to a boolean
+	download, convErr := strconv.ParseBool(downloadArr[0])
+
+	if convErr != nil {
+		// Error converting to a boolean, assume false
+		log.WithFields(log.Fields{
+			"Download":         r.URL.Query()[goGetParam],
+			"Go Get Parameter": goGetParam,
+		}).Error(convErr)
+		return false
+	}
+
+	// Is it set to false?
+	if !download {
+		log.WithFields(log.Fields{
+			"Download":         r.URL.Query()[goGetParam],
+			"Go Get Parameter": goGetParam,
+		}).Debug("Is Not a Go Get Request")
+		return false
+	}
+
+	// Must be a go get request!
+	log.WithFields(log.Fields{
+		"Download":         r.URL.Query()[goGetParam],
+		"Go Get Parameter": goGetParam,
+	}).Debug("Is a Go Get Request")
+	return true
 }
