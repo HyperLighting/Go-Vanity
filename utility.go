@@ -7,7 +7,7 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-func readFile(fileName string) (out []byte, err error) {
+func readLocalFile(fileName string) (out []byte, err error) {
 	// Open the File
 	file, errorOpen := os.Open(fileName)
 
