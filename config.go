@@ -42,7 +42,7 @@ type Conf struct {
 			File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
 		} `yaml:"Prod" json:"Prod" env-prefix:"PROD_"`
 		Dev struct {
-			Method string `yaml:"Method" json:"Method" env:"METHOD" env-default:"file"`
+			Method string `yaml:"Method" json:"Method" env:"METHOD" env-default:"stdout"`
 			Format string `yaml:"Format" json:"Format" env:"FORMAT" env-default:"text"`
 			Level  string `yaml:"Level" json:"Level" env:"LEVEL" env-default:"Debug"`
 			File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
