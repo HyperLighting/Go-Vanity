@@ -14,7 +14,7 @@ var (
 )
 
 type Project struct {
-	Name        string            `yaml:"Name" json:"Name`
+	Name        string            `yaml:"Name" json:"Name"`
 	ProjectPath string            `yaml:"ProjectPath" json:"ProjectPath"`
 	EnabledRepo string            `yaml:"EnabledRepo" json:"EnabledRepo"`
 	EnabledDocs string            `yaml:"EnabledDocs" json:"EnabledDocs"`
