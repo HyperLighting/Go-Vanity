@@ -16,16 +16,17 @@ type Conf struct {
 		StaticDir string `yaml:"StaticDir" json:"StaticDir" env:"STATICDIR" env-default:"static"`
 	} `yaml:"Server" json:"Server" env-prefix:"VANITY_SERVER_"`
 	Projects struct {
-		FileName    string `yaml:"FileName" json:"FileName" env:"FILENAME" env-default:"projects.json"`
+		Source       string `yaml:"Source" json:"Source" env:"SOURCE" env-default:"projects.yml"`
+		SourceType   string `yaml:"SourceType" json:"SourceType" env:"SOURCETYPE" env-default:"local"`
+		SourceFormat string `yaml:"SourceFormat" json:"SourceFormat" env:"SOURCEFORMAT" env-default:"yaml"`
+		Refresh      struct {
+			Enabled   bool   `yaml:"Enabled" json:"Enabled" env:"REFRESH" env-default:"false"`
+			Frequency string `yaml:"Frequency" json:"Frequency" env:"FREQUENCY" env-default:"0 0 * * *"`
+		} `yaml:"Refresh" json:"Refresh" env-prefix:"REFRESH_"`
 		MetaRefresh struct {
-			Enabled bool   `yaml:"Enabled" json:"Enabled" env:"ENABLED" env-default:"false"`
-			To      string `yaml:"To" json:"To" env:"TO" env-default:"docs"`
-		} `yaml:"MetaRefresh" json:"MetaRefresh" env-prefix:"METAREFRESH_"`
-		Remote struct {
-			Enabled          bool   `yaml:"Enabled" json:"Enabled" env:"ENABLED" env-default:"false"`
-			RefreshFrequency string `yaml:"RefreshFrequency" json:"RefreshFrequency" env:"REFRESH" env-default:"0 0 0 0 0 0"`
-			URL              string `yaml:"URL" json:"URL" env:"URL"`
-		} `yaml:"Remote" json:"Remote" env-prefix:"REMOTE_"`
+			Enabled bool   `yaml:"Enabled" json:"Enabled" env:"ENABLED" env-default:"true"`
+			To      string `yaml:"To" json:"To" env:"TO" env-default:"repo"`
+		} `yaml:"MetaRefresh" json:"MetaRefresh" env-prefix:"METAREFRESH"`
 	} `yaml:"Projects" json:"Projects" env-prefix:"VANITY_PROJECTS_"`
 	Logging struct {
 		Default struct {
