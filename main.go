@@ -6,6 +6,7 @@ import (
 var (
 	Environment Env
 	Config      Conf
+	Projects    []Project
 )
 
 func init() {
@@ -13,6 +14,7 @@ func init() {
 	Environment = initEnvironment()
 	initConfig()
 	initLogging()
+	initProjects()
 }
 
 func main() {

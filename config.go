@@ -16,16 +16,17 @@ type Conf struct {
 		StaticDir string `yaml:"StaticDir" json:"StaticDir" env:"STATICDIR" env-default:"static"`
 	} `yaml:"Server" json:"Server" env-prefix:"VANITY_SERVER_"`
 	Projects struct {
-		FileName    string `yaml:"FileName" json:"FileName" env:"FILENAME" env-default:"projects.json"`
+		Source       string `yaml:"Source" json:"Source" env:"SOURCE" env-default:"projects.yml"`
+		SourceType   string `yaml:"SourceType" json:"SourceType" env:"SOURCETYPE" env-default:"local"`
+		SourceFormat string `yaml:"SourceFormat" json:"SourceFormat" env:"SOURCEFORMAT" env-default:"yaml"`
+		Refresh      struct {
+			Enabled   bool   `yaml:"Enabled" json:"Enabled" env:"REFRESH" env-default:"false"`
+			Frequency string `yaml:"Frequency" json:"Frequency" env:"FREQUENCY" env-default:"0 0 * * *"`
+		} `yaml:"Refresh" json:"Refresh" env-prefix:"REFRESH_"`
 		MetaRefresh struct {
-			Enabled bool   `yaml:"Enabled" json:"Enabled" env:"ENABLED" env-default:"false"`
-			To      string `yaml:"To" json:"To" env:"TO" env-default:"docs"`
-		} `yaml:"MetaRefresh" json:"MetaRefresh" env-prefix:"METAREFRESH_"`
-		Remote struct {
-			Enabled          bool   `yaml:"Enabled" json:"Enabled" env:"ENABLED" env-default:"false"`
-			RefreshFrequency string `yaml:"RefreshFrequency" json:"RefreshFrequency" env:"REFRESH" env-default:"0 0 0 0 0 0"`
-			URL              string `yaml:"URL" json:"URL" env:"URL"`
-		} `yaml:"Remote" json:"Remote" env-prefix:"REMOTE_"`
+			Enabled bool   `yaml:"Enabled" json:"Enabled" env:"ENABLED" env-default:"true"`
+			To      string `yaml:"To" json:"To" env:"TO" env-default:"repo"`
+		} `yaml:"MetaRefresh" json:"MetaRefresh" env-prefix:"METAREFRESH"`
 	} `yaml:"Projects" json:"Projects" env-prefix:"VANITY_PROJECTS_"`
 	Logging struct {
 		Default struct {
@@ -41,7 +42,7 @@ type Conf struct {
 			File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
 		} `yaml:"Prod" json:"Prod" env-prefix:"PROD_"`
 		Dev struct {
-			Method string `yaml:"Method" json:"Method" env:"METHOD" env-default:"file"`
+			Method string `yaml:"Method" json:"Method" env:"METHOD" env-default:"stdout"`
 			Format string `yaml:"Format" json:"Format" env:"FORMAT" env-default:"text"`
 			Level  string `yaml:"Level" json:"Level" env:"LEVEL" env-default:"Debug"`
 			File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
