@@ -92,13 +92,14 @@ func logToFileInit(fileName string) {
 
 	// Open the file, defer closing
 	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0666)
-	defer file.Close()
 
 	if err != nil {
 		log.SetOutput(os.Stderr)
 		log.Error(err)
 		return
 	}
+
+	defer file.Close()
 
 	// Set the output to the file we have opened
 	log.SetOutput(file)
