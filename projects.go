@@ -94,7 +94,7 @@ func loadProjects() {
 	switch Config.Projects.SourceFormat {
 	case "json", "JSON":
 		convErr = json.Unmarshal(b, &newProjects)
-	case "yaml", "YAML":
+	case "yaml", "YAML", "yml", "YML":
 		convErr = yaml.Unmarshal(b, &newProjects)
 	default:
 		handleProjectsError(log.Fields{
