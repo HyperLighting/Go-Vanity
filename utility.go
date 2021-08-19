@@ -107,3 +107,10 @@ func isGoGetRequest(r *http.Request) bool {
 	}).Debug("Is a Go Get Request")
 	return true
 }
+
+func redirect(w http.ResponseWriter, r *http.Request, site string) {
+	log.WithFields(log.Fields{
+		"To": site,
+	}).Debug("Redirecting")
+	http.Redirect(w, r, site, http.StatusFound)
+}
