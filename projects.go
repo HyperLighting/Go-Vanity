@@ -285,5 +285,13 @@ func (project Project) Handle(mux *http.ServeMux) {
 // ServeDocs handles calls for the documentation of a project. It handles the decision making between serving static
 // documents or redirecting another source.
 func (project Project) ServeDocs(w http.ResponseWriter, r *http.Request) {
-	redirect(w, r, "https://google.com")
+	if project.isServingStaticDocs() && project.validStaticFolder() {
+		// Serve the static folder
+		folder := Config.Server.StaticDir + "/" + project.Docs[project.EnabledDocs]
+		serveStaticFolder(folder, true, "/"+project.ProjectPath+"/").ServeHTTP(w, r)
+	}
+
+	// Redirect to the docs URL
+	url := project.docsURL()
+	redirect(w, r, url)
 }
