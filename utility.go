@@ -121,3 +121,10 @@ func redirect(w http.ResponseWriter, r *http.Request, site string) {
 	}).Debug("Redirecting")
 	http.Redirect(w, r, site, http.StatusFound)
 }
+
+func folderExists(directory string) bool {
+	if _, err := os.Stat(directory); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
