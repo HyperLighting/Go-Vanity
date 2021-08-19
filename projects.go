@@ -229,12 +229,29 @@ func (project Project) getRepo() (repo Repo, err error) {
 
 	// Try other projects or fail
 	if len(project.Repos) > 0 {
+		var potentialRepo Repo
+		var potentialRepoFound bool = false
+
 		// Try all the repos that are registered
 		for _, r := range project.Repos {
 			if valid, _ := r.isValid(); valid {
-				log.Error("repo not found, using alternate")
-				return r, nil
+				// Have we already found a potential match?
+				if !potentialRepoFound {
+					potentialRepo = r
+				}
+
+				// Check if it has a valid source
+				if r.hasValidSource() {
+					log.Error("repo not found, using alternate")
+					return r, nil
+				}
 			}
+		}
+
+		// Nothing found that is valid and has a valid source, just return the first valid result
+		if potentialRepoFound {
+			log.Error("repo not found, using alternate")
+			return potentialRepo, nil
 		}
 
 		// None of the repos are valid, return an error and fail
