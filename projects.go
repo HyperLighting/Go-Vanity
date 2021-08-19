@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"net/http"
 
-	gdt "github.com/joeizzard/go-dev-tools"
 	"github.com/robfig/cron/v3"
 	log "github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v2"
@@ -117,7 +116,15 @@ func loadProjects() {
 	log.Info("Projects refreshed")
 	Projects = newProjects
 
-	gdt.DumpMap(Projects)
+	// Refresh the server on new projects load
+	if initialProjectsLoadCompleted {
+		// Currently it is not possible to update the existing projects
+		// TODO: Find a way to update or restart the server that's running when refreshing projects
+		return
+	}
+
+	// Ensure initial projects load is set
+	initialProjectsLoadCompleted = true
 }
 
 func handleProjectsError(Fields log.Fields, msg ...interface{}) {
