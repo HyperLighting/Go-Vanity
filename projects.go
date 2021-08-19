@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"net/http"
 
 	"github.com/robfig/cron/v3"
@@ -213,6 +214,34 @@ func (project Project) docsURL() string {
 
 	// No repo, fall back to main directory
 	return Config.Server.FQDomain()
+}
+
+// getEnabledRepo returns a valid repo info. This will first try to use the enabled repo, if it is valid. If it is
+// not valid, it will loop through all of the repos in the project, and return the first it finds that is valid.
+// If no valid repos can be found, it will return an error.
+func (project Project) getRepo() (repo Repo, err error) {
+	// Try the enabled project
+	if en, ok := project.Repos[project.EnabledRepo]; ok {
+		if valid, _ := en.isValid(); valid {
+			return en, nil
+		}
+	}
+
+	// Try other projects or fail
+	if len(project.Repos) > 0 {
+		// Try all the repos that are registered
+		for _, r := range project.Repos {
+			if valid, _ := r.isValid(); valid {
+				log.Error("repo not found, using alternate")
+				return r, nil
+			}
+		}
+
+		// None of the repos are valid, return an error and fail
+		return Repo{}, errors.New("repo not found, no valid repos found")
+	} else {
+		return Repo{}, errors.New("no repos found")
+	}
 }
 
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
