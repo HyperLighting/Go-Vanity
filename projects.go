@@ -153,6 +153,17 @@ func handleProjectsError(Fields log.Fields, msg ...interface{}) {
 // Projects Helper Functions
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 
+// isServingStaticDocs takes a project and evaluates the enabled docs property to determine if we are serving
+// local files or redirecting to an external source
+func (project Project) isServingStaticDocs() (res bool) {
+	switch project.EnabledDocs {
+	case "static", "Static", "STATIC":
+		return true
+	default:
+		return false
+	}
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // Projects HTTP Functions
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
