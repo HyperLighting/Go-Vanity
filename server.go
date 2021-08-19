@@ -51,3 +51,21 @@ func (server ServerConfig) FQDomain() string {
 		return "http://" + server.Hostname
 	}
 }
+
+func serveStaticFolder(directory string, strip bool, stripPrefix string) http.Handler {
+	log.WithFields(log.Fields{
+		"Directory":   directory,
+		"Strip":       strip,
+		"StripPrefix": stripPrefix,
+	}).Debug("Serving Stating Folder")
+
+	if folderExists(directory) {
+		fs := http.FileServer(http.Dir(directory))
+		if strip {
+			return http.StripPrefix(stripPrefix, fs)
+		}
+		return fs
+	}
+	log.Error("Folder doesn't exist, falling back to redirect to home")
+	return http.RedirectHandler(Config.Server.FQDomain(), http.StatusFound)
+}
