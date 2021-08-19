@@ -164,6 +164,14 @@ func (project Project) isServingStaticDocs() (res bool) {
 	}
 }
 
+// validStaticFolder checks if the folder exists, but only if we are serving a static folder.
+func (project Project) validStaticFolder() bool {
+	if project.isServingStaticDocs() {
+		return folderExists(Config.Server.StaticDir + "/" + project.Docs[project.EnabledDocs])
+	}
+	return false
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // Projects HTTP Functions
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
