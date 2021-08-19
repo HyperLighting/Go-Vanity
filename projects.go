@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"net/http"
 
 	gdt "github.com/joeizzard/go-dev-tools"
 	"github.com/robfig/cron/v3"
@@ -125,4 +126,19 @@ func handleProjectsError(Fields log.Fields, msg ...interface{}) {
 	} else {
 		log.WithFields(Fields).Fatal(msg...)
 	}
+}
+
+func (project Project) Handle(mux *http.ServeMux) {
+	mux.HandleFunc("/"+project.ProjectPath+"/", func(w http.ResponseWriter, r *http.Request) {
+		log.Debug("Request for: " + project.Name)
+
+		// Serve the download meta data
+		if isGoGetRequest(r) {
+			project.GenerateVanityPage(w, r)
+			return
+		}
+
+		// Redirect to docs
+		project.ServeDocs(w, r)
+	})
 }
