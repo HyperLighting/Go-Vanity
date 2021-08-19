@@ -43,3 +43,11 @@ func buildMux() {
 	// Register projects
 	handleProjects(Mux)
 }
+
+func (server ServerConfig) FQDomain() string {
+	if server.UseSSL {
+		return "https://" + server.Hostname
+	} else {
+		return "http://" + server.Hostname
+	}
+}
