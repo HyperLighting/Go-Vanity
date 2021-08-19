@@ -108,6 +108,13 @@ func isGoGetRequest(r *http.Request) bool {
 	return true
 }
 
+func handleProjects(mux *http.ServeMux) {
+	for _, project := range Projects {
+		project.Handle(mux)
+		log.Info("Registered Project " + project.Name)
+	}
+}
+
 func redirect(w http.ResponseWriter, r *http.Request, site string) {
 	log.WithFields(log.Fields{
 		"To": site,
