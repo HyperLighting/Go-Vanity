@@ -241,7 +241,7 @@ func (project Project) getRepo() (repo Repo, err error) {
 				}
 
 				// Check if it has a valid source
-				if r.hasValidSource() {
+				if r.Source.isValid() {
 					log.Error("repo not found, using alternate")
 					return r, nil
 				}
@@ -280,8 +280,8 @@ func (repo Repo) isValid() (valid bool, err error) {
 
 // hasValidSource check if a repo has information in all the required source fields. This allows more detail in the vanity
 // page. Returns a bool based on the result.
-func (repo Repo) hasValidSource() bool {
-	if repo.Source.DirectoryURL != "" && repo.Source.FileLineURL != "" && repo.Source.HomeURL != "" {
+func (source Source) isValid() bool {
+	if source.DirectoryURL != "" && source.FileLineURL != "" && source.HomeURL != "" {
 		return true
 	}
 	return false
