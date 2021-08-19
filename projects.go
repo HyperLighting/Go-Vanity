@@ -13,6 +13,10 @@ var (
 	initialProjectsLoadCompleted bool = false
 )
 
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// Project Types
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
 type Project struct {
 	Name        string            `yaml:"Name" json:"Name"`
 	ProjectPath string            `yaml:"ProjectPath" json:"ProjectPath"`
@@ -35,6 +39,12 @@ type Source struct {
 	FileLineURL  string `yaml:"FileLineURL" json:"FileLineURL"`
 }
 
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// Projects Initialisation
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// initProjects handles calling the initial loading of the projects, and scheduling them to be reloaded if the config
+// is set to refresh. If refresh is enabled but a malformed frequency is set, it will default to daily.
 func initProjects() {
 	// Are we loading a remote?
 	if Config.Projects.Refresh.Enabled {
@@ -64,6 +74,7 @@ func initProjects() {
 	}
 }
 
+// loadProjects performs the actual loading of the projects, either remote or local.
 func loadProjects() {
 	// Remote or Local?
 	var b []byte
@@ -127,6 +138,9 @@ func loadProjects() {
 	initialProjectsLoadCompleted = true
 }
 
+// handleProjectsError is a helper function for handling errors in the loadProjects function. If this is the first
+// time loading projects, it will cause a fatal error which is logged with the fields passed. If we are reloading
+// projects it will just cause an error log as we can continue using the old version of projects.
 func handleProjectsError(Fields log.Fields, msg ...interface{}) {
 	if initialProjectsLoadCompleted {
 		log.WithFields(Fields).Error(msg...)
@@ -135,6 +149,16 @@ func handleProjectsError(Fields log.Fields, msg ...interface{}) {
 	}
 }
 
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// Projects Helper Functions
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+// Projects HTTP Functions
+// ------------------------------------------------------------------------------------------------------------------------------------------------------
+
+// Handle deals with registering a project with the supplied mux. It also builds the function for deciding to call
+// GenerateVanityPage or calling ServeDocs
 func (project Project) Handle(mux *http.ServeMux) {
 	mux.HandleFunc("/"+project.ProjectPath+"/", func(w http.ResponseWriter, r *http.Request) {
 		log.Debug("Request for: " + project.Name)
@@ -148,4 +172,10 @@ func (project Project) Handle(mux *http.ServeMux) {
 		// Redirect to docs
 		project.ServeDocs(w, r)
 	})
+}
+
+// ServeDocs handles calls for the documentation of a project. It handles the decision making between serving static
+// documents or redirecting another source.
+func (project Project) ServeDocs(w http.ResponseWriter, r *http.Request) {
+	redirect(w, r, "https://google.com")
 }
