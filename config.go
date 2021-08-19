@@ -9,12 +9,7 @@ import (
 )
 
 type Conf struct {
-	Server struct {
-		Port      int    `yaml:"Port" json:"Port" env:"PORT" env-default:"8080"`
-		Hostname  string `yaml:"Hostname" json:"Hostname" env:"HOSTNAME" env-default:"go.example.dev"`
-		UseSSL    bool   `yaml:"UseSSL" json:"UseSSL" env:"USESSL" env-default:"true"`
-		StaticDir string `yaml:"StaticDir" json:"StaticDir" env:"STATICDIR" env-default:"static"`
-	} `yaml:"Server" json:"Server" env-prefix:"VANITY_SERVER_"`
+	Server   ServerConfig `yaml:"Server" json:"Server" env-prefix:"VANITY_SERVER_"`
 	Projects struct {
 		Source       string `yaml:"Source" json:"Source" env:"SOURCE" env-default:"projects.yml"`
 		SourceType   string `yaml:"SourceType" json:"SourceType" env:"SOURCETYPE" env-default:"local"`
@@ -48,6 +43,13 @@ type Conf struct {
 			File   string `yaml:"File" json:"File" env:"FILE" env-default:"vanity.log"`
 		} `yaml:"Dev" json:"Dev" env-prefix:"DEV_"`
 	} `yaml:"Logging" json:"Logging" env-prefix:"VANITY_LOGGING_"`
+}
+
+type ServerConfig struct {
+	Port      int    `yaml:"Port" json:"Port" env:"PORT" env-default:"8080"`
+	Hostname  string `yaml:"Hostname" json:"Hostname" env:"HOSTNAME" env-default:"go.example.dev"`
+	UseSSL    bool   `yaml:"UseSSL" json:"UseSSL" env:"USESSL" env-default:"true"`
+	StaticDir string `yaml:"StaticDir" json:"StaticDir" env:"STATICDIR" env-default:"static"`
 }
 
 func initConfig() {
