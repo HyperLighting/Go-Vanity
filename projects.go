@@ -172,6 +172,11 @@ func (project Project) validStaticFolder() bool {
 	return false
 }
 
+// vanityURL builds the url to a specific project
+func (project Project) vanityURL() string {
+	return Config.Server.FQDomain() + "/" + project.ProjectPath
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // Projects HTTP Functions
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
