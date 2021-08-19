@@ -177,6 +177,44 @@ func (project Project) vanityURL() string {
 	return Config.Server.FQDomain() + "/" + project.ProjectPath
 }
 
+// docsURL works through several options to find a suitable url to use for the documentation. This works through
+// static options, including checking that the folder is valid before serving that option, the enabled option
+// and then all other documentation links. Finally if all else fails it will fall back to the main directory URL.
+func (project Project) docsURL() string {
+	// Try what ever is enabled
+	if project.isServingStaticDocs() {
+		if project.validStaticFolder() {
+			return project.vanityURL()
+		}
+	} else {
+		// Check the enabled Docs is valid
+		if url, ok := project.Docs[project.EnabledDocs]; ok {
+			return url
+		}
+	}
+
+	// Not static, and no valid docs url, try other docs urls
+	if len(project.Docs) > 0 {
+		for k, url := range project.Docs {
+			if k != "static" && k != "Static" && k != "STATIC" {
+				return url
+			}
+		}
+	}
+
+	// No docs set, try the repo
+	repo, err := project.getRepo()
+
+	if err != nil {
+		log.Error(err)
+	} else {
+		return repo.URL
+	}
+
+	// No repo, fall back to main directory
+	return Config.Server.FQDomain()
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // Projects HTTP Functions
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
