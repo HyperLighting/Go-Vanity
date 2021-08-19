@@ -261,6 +261,15 @@ func (repo Repo) isValid() (valid bool, err error) {
 	return true, nil
 }
 
+// hasValidSource check if a repo has information in all the required source fields. This allows more detail in the vanity
+// page. Returns a bool based on the result.
+func (repo Repo) hasValidSource() bool {
+	if repo.Source.DirectoryURL != "" && repo.Source.FileLineURL != "" && repo.Source.HomeURL != "" {
+		return true
+	}
+	return false
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // Projects HTTP Functions
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
