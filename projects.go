@@ -244,6 +244,23 @@ func (project Project) getRepo() (repo Repo, err error) {
 	}
 }
 
+// isValid check is the provided repo has a URL and Type which are the minimum pieces of data required for other parts of
+// the system.
+func (repo Repo) isValid() (valid bool, err error) {
+	// Check the URL is set
+	if repo.URL == "" {
+		return false, errors.New("repo not valid, missing URL")
+	}
+
+	// Check the repo type is set
+	if repo.Type == "" {
+		return false, errors.New("repo not valid, missing Type")
+	}
+
+	// Default to true as it contains the required info
+	return true, nil
+}
+
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
 // Projects HTTP Functions
 // ------------------------------------------------------------------------------------------------------------------------------------------------------
